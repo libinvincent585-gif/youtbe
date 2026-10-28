@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+    <title>Loop — Short video studio</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main id="app">
+      <section id="app-screen" class="app-screen">
+        <section id="login-page" class="page login-page hidden">
+          <form id="login-form" class="login-panel">
+            <span class="login-brand-mark" aria-hidden="true">L</span>
+            <p class="login-eyebrow">WELCOME TO LOOP</p>
+            <h1 id="auth-title">Log in to continue</h1>
+            <p id="auth-description" class="login-description">Enter your email address and password.</p>
+            <div class="auth-mode-switch" role="tablist" aria-label="Account access">
+              <button id="auth-login-mode" class="auth-mode active" type="button" role="tab" aria-selected="true">Log in</button>
+              <button id="auth-signup-mode" class="auth-mode" type="button" role="tab" aria-selected="false">Sign up</button>
+            </div>
+            <div id="signup-username-field" class="auth-field hidden">
+              <label for="login-username">Username</label>
+              <input id="login-username" name="username" type="text" maxlength="32" autocomplete="username" pattern="[A-Za-z0-9._\-]{1,32}" placeholder="Your username">
+            </div>
+            <label for="login-email">Email address</label>
+            <input id="login-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+            <label for="login-password">Password</label>
+            <input id="login-password" name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" placeholder="At least 8 characters" required>
+            <div id="signup-confirm-field" class="auth-field hidden">
+              <label for="login-confirm-password">Confirm password</label>
+              <input id="login-confirm-password" name="confirmPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password">
+            </div>
+            <p id="login-error" class="form-error" role="alert"></p>
+            <button id="login-submit" class="login-submit" type="submit">Log in</button>
+            <button id="login-back" class="login-back hidden" type="button">Back</button>
+            <p class="login-note">Email account passwords are securely hashed before storage.</p>
+          </form>
+        </section>
+
+        <section id="feed-page" class="page feed-page">
+          <div id="feed-list" class="feed-list"></div>
+        </section>
+
+        <section id="details-page" class="page details-page hidden">
+          <form id="upload-form" class="details-layout">
+            <div class="upload-step" data-upload-step="1">
+              <div class="step-heading">
+                <button id="back-to-feed" class="back-button" type="button" aria-label="Back to feed">←</button>
+                <span>1 / 3</span>
+              </div>
+              <div class="video-preview-wrap">
+                <video id="video-preview" class="video-preview" controls playsinline></video>
+              </div>
+              <p id="video-metadata" class="video-metadata" role="status">Loading video details…</p>
+              <div class="trim-controls">
+                <label for="trim-start">Start <output id="trim-start-value">0:00</output></label>
+                <input id="trim-start" type="range" min="0" max="0" step="0.1" value="0" disabled>
+                <label for="trim-end">End <output id="trim-end-value">0:00</output></label>
+                <input id="trim-end" type="range" min="0" max="0" step="0.1" value="0" disabled>
+                <p id="trim-duration" class="trim-duration">Select a video to set its trim.</p>
+              </div>
+              <audio id="soundtrack-preview" class="soundtrack-preview" controls hidden></audio>
+              <label class="soundtrack-picker" for="soundtrack-file-input">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                <span id="soundtrack-label">Add sound or music</span>
+              </label>
+              <input id="soundtrack-file-input" type="file" accept="audio/*" hidden>
+              <button id="next-to-caption" class="step-button" type="button">Next</button>
+            </div>
+            <div class="upload-step hidden" data-upload-step="2">
+              <div class="step-heading">
+                <button class="back-to-step" data-step="1" type="button" aria-label="Back to video preview">←</button>
+                <span>2 / 3</span>
+              </div>
+              <label class="step-label" for="title">Caption</label>
+              <textarea id="title" name="title" maxlength="500" rows="5" placeholder="Add a caption..." required></textarea>
+              <div class="step-actions">
+                <button class="secondary-step-button back-to-step" data-step="1" type="button">Back</button>
+                <button id="next-to-visibility" class="step-button" type="button">Next</button>
+              </div>
+            </div>
+            <div class="upload-step hidden" data-upload-step="3">
+              <div class="step-heading">
+                <button class="back-to-step" data-step="2" type="button" aria-label="Back to caption">←</button>
+                <span>3 / 3</span>
+              </div>
+              <label class="step-label" for="visibility">Visibility</label>
+              <select id="visibility" name="visibility">
+                <option value="Public">Public</option>
+                <option value="Private">Private</option>
+              </select>
+              <p id="upload-error" class="form-error" role="alert"></p>
+              <div class="step-actions">
+                <button class="secondary-step-button back-to-step" data-step="2" type="button">Back</button>
+                <button id="upload-button" class="step-button" type="submit">Upload</button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section id="profile-page" class="page profile-page hidden">
+          <header class="profile-topbar">
+            <button id="profile-back" class="back-button" type="button" aria-label="Back to feed">←</button>
+            <h1 id="profile-topbar-name"></h1>
+            <button id="profile-settings-button" class="profile-settings-button hidden" type="button" aria-label="Profile settings" aria-haspopup="dialog" title="Profile settings">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"></path><path d="m19.4 15 .1.1a1.8 1.8 0 0 1-2.5 2.5l-.1-.1a1.8 1.8 0 0 0-3 .9v.2a1.8 1.8 0 0 1-3.6 0v-.2a1.8 1.8 0 0 0-3-.9l-.1.1a1.8 1.8 0 0 1-2.5-2.5l.1-.1a1.8 1.8 0 0 0-.9-3H3.7a1.8 1.8 0 0 1 0-3.6h.2a1.8 1.8 0 0 0 .9-3l-.1-.1a1.8 1.8 0 0 1 2.5-2.5l.1.1a1.8 1.8 0 0 0 3-.9v-.2a1.8 1.8 0 0 1 3.6 0v.2a1.8 1.8 0 0 0 3 .9l.1-.1a1.8 1.8 0 0 1 2.5 2.5l-.1.1a1.8 1.8 0 0 0 .9 3h.2a1.8 1.8 0 0 1 0 3.6h-.2a1.8 1.8 0 0 0-.9 3Z"></path></svg>
+            </button>
+            <button id="profile-topbar-logout" class="profile-logout-button hidden" type="button">Log out</button>
+          </header>
+          <div id="profile-content" class="profile-content"></div>
+        </section>
+
+        <nav class="bottom-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-tab="home" type="button" aria-label="Home">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path></svg><span>Home</span>
+          </button>
+          <button class="nav-item" data-tab="shorts" type="button" aria-label="Shorts">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="4"></rect><path d="m10 8 5 4-5 4z"></path></svg><span>Shorts</span>
+          </button>
+          <button id="pick-video-button" class="nav-create" type="button" aria-label="Upload a video">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
+          <button class="nav-item" data-tab="subscriptions" type="button" aria-label="Subscriptions">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"></path><path d="M4 5.5v13A2.5 2.5 0 0 1 6.5 16H20"></path></svg><span>Subscriptions</span>
+          </button>
+          <button class="nav-item" data-tab="profile" type="button" aria-label="You">
+            <svg class="profile-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg><span>You</span>
+          </button>
+        </nav>
+        <input id="video-file-input" type="file" accept="video/*" hidden>
+      </section>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+    <script src="app.js" defer></script>
+  </body>
+</html>
